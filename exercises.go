@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -49,11 +50,55 @@ func main() {
 	// exercise22()
 	// exercise23()
 	// exercise24()
-	exercise25()
+	// exercise25()
+	// exercise26()
+	exercise27()
 }
 
+//map
+func exercise27() {
+	// mymap := make(map[string]int)
+	// mymap["Laisson"] = 36
+	// mymap["Elaine"] = 32
+	// mymap["Vinícius"] = 4
+	//or
+	mymap := map[string]int{"Laisson": 36, "Elaine": 32, "Vinícius": 3}
+	mymap["another"] = 123
+	for k, v := range mymap {
+		fmt.Printf("%v -> %v\n", k, v)
+	}
+
+	delete(mymap, "another")
+	fmt.Printf("\nAfter delete\n\n")
+	for k, v := range mymap {
+		fmt.Printf("%v -> %v\n", k, v)
+	}
+}
+
+//slice (multi-dimensional)
+func exercise26() {
+	slice := [][]string{
+		{"Laisson", "Silveira", strconv.Itoa(time.Now().Year()-1986) + " anos"},
+		{"Elaine", "Silveira", strconv.Itoa(time.Now().Year()-1990) + " anos"},
+		{"Vinícius", "Silveira", strconv.Itoa(time.Now().Year()-2018) + " anos"},
+	}
+	for i, x := range slice {
+		fmt.Println(i)
+		for _, v := range x {
+			fmt.Println("\t", v)
+		}
+	}
+}
+
+//slice (len|cap)
 func exercise25() {
-	panic("unimplemented")
+	states := make([]string, 26, 26)
+	states = []string{"SC", "SP", "PR", "RS", "RJ"}
+	fmt.Println("len", len(states))
+	fmt.Println("cap", cap(states))
+	for i := 0; i < len(states); i++ {
+		fmt.Println(states[i])
+	}
 }
 
 //slice (slicing with append)
