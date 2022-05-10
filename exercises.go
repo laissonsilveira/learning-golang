@@ -25,37 +25,160 @@ var g gogo
 var h int
 
 func main() {
-	// exercise01()
-	// exercise02()
-	// exercise03()
-	// exercise04()
-	// exercise05()
-	// exercise06()
-	// exercise07()
-	// exercise08()
-	// exercise09()
-	// exercise10()
-	// exercise11()
+	// exercise01() //values
+	// exercise02() //values
+	// exercise03() //values
+	// exercise04() //values|type
+	// exercise05() //values|type
+	// exercise06() //fmt
+	// exercise07() //operators
+	// exercise08() //constants
+	// exercise09() //bitwise
+	// exercise10() //variables
+	// exercise11() //format string
 	// challange01()
-	// exercise12()
-	// exercise13()
-	// exercise14()
-	// exercise15()
-	// exercise16()
-	// exercise17()
-	// exercise18()
-	// exercise19()
-	// exercise20()
-	// exercise21()
-	// exercise22()
-	// exercise23()
-	// exercise24()
-	// exercise25()
-	// exercise26()
-	exercise27()
+	// exercise12() //for
+	// exercise13() //for
+	// exercise14() //for
+	// exercise15() //for
+	// exercise16() //for
+	// exercise17() //for
+	// exercise18() //switch
+	// exercise19() //switch
+	// exercise20() //array
+	// exercise21() //slice
+	// exercise22() //slice (slicing)
+	// exercise23() //slice (add)
+	// exercise24() //slice (slicing with append)
+	// exercise25() //slice (len|cap)
+	// exercise26() //slice (multi-dimensional)
+	// exercise27() //map
+	// exercise28() //struct
+	// exercise29() //struct (with map)
+	// exercise30() //struct (embedded struct)
+	// exercise31() //func
+	// exercise32() //func with defer
+	// exercise33() //methods
 }
 
-//map
+//BEGIN ------ exercise33() --------
+func exercise33() {
+	p01 := pessoa{"Laisson", "Rangel", 36}
+	completename := p01.makeCompleteName()
+	fmt.Println(completename, "is", p01.idade, "years old")
+}
+
+type pessoa struct {
+	nome, sobrenome string
+	idade           int
+}
+
+func (p pessoa) makeCompleteName() string {
+	return fmt.Sprintf("%v %v", p.nome, p.sobrenome)
+}
+
+//END ------ exercise33() --------
+
+func exercise32() {
+	a := func() {
+		fmt.Println("with defer (should is the last one)")
+	}
+	b := func() {
+		fmt.Println("without defer")
+	}
+	defer a()
+	b()
+}
+
+//BEGIN ------ exercise31() --------
+func exercise31() {
+	numbers := []int{1, 2, 3, 4}
+	fmt.Println(sum(numbers...))
+}
+
+func sum(x ...int) (string, int, string, int) {
+	total := 0
+	// for i := 0; i < len(x); i++ {
+	// 	total += x[i]
+	// }
+	// OR
+	for _, v := range x {
+		total += v
+	}
+	return "result is:", total, " | lenght is: ", len(x)
+}
+
+//END ------ exercise31() --------
+
+func exercise30() {
+	type veiculo struct {
+		porta      int
+		cor        string
+		radio      []string
+		motoristas map[int]string
+	}
+	type caminhonete struct {
+		veiculo
+		tracaoNasQuatro bool
+	}
+	type sedan struct {
+		veiculo
+		modeloLuxo bool
+	}
+
+	motoristas := map[int]string{36: "Laisson", 32: "Elaine"}
+	radios := []string{"AM", "FM"}
+
+	c01 := caminhonete{veiculo{2, "Branco", radios, motoristas}, false}
+	c02 := caminhonete{veiculo{4, "Preto", radios, motoristas}, true}
+
+	s01 := sedan{veiculo{2, "Vermelho", radios, motoristas}, false}
+	s02 := sedan{veiculo{4, "Prata", radios, motoristas}, true}
+
+	fmt.Println(c01, "\n", c02, "\n", s01, "\n", s02)
+
+	fmt.Println("O melhor motorista é:", c01.motoristas[36])
+}
+
+func exercise29() {
+	type pessoa struct {
+		nome      string
+		sobrenome string
+		sabores   []string
+	}
+
+	p01 := pessoa{"Laisson", "Silveira", []string{"Chocolate", "Flocos"}}
+	p02 := pessoa{"Elaine", "Machado", []string{"Morango", "Coco"}}
+
+	mymap := map[string]pessoa{
+		p01.sobrenome: p01,
+		p02.sobrenome: p02,
+	}
+
+	for k, v := range mymap {
+		fmt.Println(k)
+		fmt.Println("\t", v.nome, v.sobrenome)
+		for _, s := range v.sabores {
+			fmt.Println("\t\t", s)
+		}
+	}
+}
+
+func exercise28() {
+	type pessoa struct {
+		nome      string
+		sobrenome string
+		sabores   []string
+	}
+
+	p01 := pessoa{"Laisson", "Silveira", []string{"Chocolate", "Flocos"}}
+
+	fmt.Println(p01.nome, p01.sobrenome)
+	for _, v := range p01.sabores {
+		fmt.Println(v)
+	}
+}
+
 func exercise27() {
 	// mymap := make(map[string]int)
 	// mymap["Laisson"] = 36
@@ -75,7 +198,6 @@ func exercise27() {
 	}
 }
 
-//slice (multi-dimensional)
 func exercise26() {
 	slice := [][]string{
 		{"Laisson", "Silveira", strconv.Itoa(time.Now().Year()-1986) + " anos"},
@@ -90,7 +212,6 @@ func exercise26() {
 	}
 }
 
-//slice (len|cap)
 func exercise25() {
 	states := make([]string, 26, 26)
 	states = []string{"SC", "SP", "PR", "RS", "RJ"}
@@ -101,14 +222,12 @@ func exercise25() {
 	}
 }
 
-//slice (slicing with append)
 func exercise24() {
 	x := []int{42, 43, 44, 45, 46, 47, 48, 49, 50, 51}
 	y := append(x[:3], x[len(x)-4:]...)
 	fmt.Println(y)
 }
 
-//slice (add)
 func exercise23() {
 	x := []int{42, 43, 44, 45, 46, 47, 48, 49, 50, 51}
 	x = append(x, 52)
@@ -117,7 +236,6 @@ func exercise23() {
 	fmt.Println(x)
 }
 
-//slice (slicing)
 func exercise22() {
 	slice := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	fmt.Println(slice[:3])
@@ -126,7 +244,6 @@ func exercise22() {
 	fmt.Println(slice[2 : len(slice)-1])
 }
 
-//slice
 func exercise21() {
 	slice := make([]int, 5)
 	slice[0] = 11
@@ -148,7 +265,6 @@ func exercise21() {
 	}
 }
 
-//array
 func exercise20() {
 	array := [5]int{11, 22, 33, 44, 55}
 	for i, v := range array {
@@ -157,7 +273,6 @@ func exercise20() {
 	fmt.Printf("%T\n", array)
 }
 
-//switch
 func exercise19() {
 	favoriteSport := "futebol"
 	switch favoriteSport {
@@ -169,7 +284,6 @@ func exercise19() {
 	}
 }
 
-//switch
 func exercise18() {
 	x := 8
 	for {
@@ -186,7 +300,6 @@ func exercise18() {
 	}
 }
 
-//for
 func exercise17() {
 	x := 8
 	for {
@@ -204,14 +317,12 @@ func exercise17() {
 	}
 }
 
-//for
 func exercise16() {
 	for i := 10; i <= 100; i++ {
 		fmt.Println(i % 4)
 	}
 }
 
-//for
 func exercise15() {
 	birthday := 1986
 	for {
@@ -224,7 +335,6 @@ func exercise15() {
 	}
 }
 
-//for
 func exercise14() {
 	birthday := 1986
 	for birthday <= time.Now().Year() {
@@ -233,7 +343,6 @@ func exercise14() {
 	}
 }
 
-//for
 func exercise13() {
 	for i := 65; i <= 90; i++ {
 		fmt.Println(i)
@@ -244,7 +353,6 @@ func exercise13() {
 	}
 }
 
-//for
 func exercise12() {
 	for i := 0; i <= 10000; i++ {
 		fmt.Println(i)
@@ -258,7 +366,6 @@ func challange01() {
 	}
 }
 
-//constants
 func exercise11() {
 	const (
 		_ = 10 + iota
@@ -269,7 +376,6 @@ func exercise11() {
 	fmt.Println(a, b, c)
 }
 
-//variables
 func exercise10() {
 	var s string = `Laisson
 	Rangel
@@ -278,7 +384,6 @@ func exercise10() {
 	fmt.Println(s)
 }
 
-//bitwise
 func exercise09() {
 	var a = 100
 	fmt.Printf("decimal\t|binário\t|hexadecimal\n")
@@ -287,7 +392,6 @@ func exercise09() {
 	fmt.Printf("%d\t|%b\t|%#x\n", b, b, b)
 }
 
-//constants
 func exercise08() {
 	const (
 		a     = 10
@@ -299,7 +403,6 @@ func exercise08() {
 	fmt.Printf("%v | %T\n", c, c)
 }
 
-//operators
 func exercise07() {
 	a := 10
 	b := 11
@@ -311,14 +414,12 @@ func exercise07() {
 	fmt.Println(a < b)
 }
 
-//fmt
 func exercise06() {
 	a := 100
 	fmt.Printf("decimal\t|binário\t|hexadecimal\n")
 	fmt.Printf("%d\t|%b\t|%#x\n", a, a, a)
 }
 
-//values|type
 func exercise05() {
 	fmt.Printf("g -> %v|%T", g, g)
 	g = 42
@@ -328,27 +429,23 @@ func exercise05() {
 	fmt.Printf("h -> %v|%T", h, h)
 }
 
-//values|type
 func exercise04() {
 	fmt.Printf("g -> %v|%T", g, g)
 	g = 42
 	fmt.Printf("g -> %v|%T", g, g)
 }
 
-//values
 func exercise03() {
 	s := fmt.Sprintf("d: %v, e: %v, f: %v", d, e, f)
 	fmt.Println("s ->", s)
 }
 
-//values
 func exercise02() {
 	fmt.Println("a ->", a)
 	fmt.Println("b ->", b)
 	fmt.Println("c ->", c)
 }
 
-//values
 func exercise01() {
 	x := 42
 	y := "James Bond"
