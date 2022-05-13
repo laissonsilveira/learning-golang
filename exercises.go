@@ -2,27 +2,10 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"time"
 )
-
-//ex02
-var a int
-var b string
-var c bool
-
-//ex03
-var d int = 42
-var e string = "James Bond"
-var f bool = true
-
-//ex04
-type gogo int
-
-var g gogo
-
-//ex05
-var h int
 
 func main() {
 	// exercise01() //values
@@ -59,21 +42,124 @@ func main() {
 	// exercise31() //func
 	// exercise32() //func with defer
 	// exercise33() //methods
+	// exercise34() //interfaces
+	// exercise35() //anonymous func
+	// exercise36() //func into var
+	// exercise37() //closures
+	// exercise38() //callback
+	// exercise39() //pointers
+	exercise40() //pointers change reference
 }
+
+func exercise40() {
+	type people struct {
+		name  string
+		idade int
+	}
+
+	changePeople := func(p *people) {
+		(*p).name = "Laisson Rangel Silveira"
+	}
+
+	p := people{"Laisson", 36}
+	fmt.Printf("%v is %v old\n", p.name, p.idade)
+	changePeople(&p)
+	fmt.Printf("%v is %v old\n", p.name, p.idade)
+
+}
+
+func exercise39() {
+	x := 10
+	y := &x
+	fmt.Println("Value of x is:", x)
+	fmt.Println("Position of x is:", &x)
+	fmt.Println("\nValue of y is:", *y)
+	fmt.Println("Position of y is:", y)
+}
+
+func exercise38() {
+	func01 := func(cb func()) {
+		fmt.Println("Function 01 call function 02 by param in the end")
+		cb()
+	}
+	func02 := func() {
+		fmt.Println("Function 02")
+	}
+
+	func01(func02)
+}
+
+func exercise37() {
+
+	getAnotherFunc := func() func() {
+		x := 0
+		return func() { //another scope
+			x++
+			fmt.Println("Function return another function. x:", x)
+		}
+	}
+
+	myFunc := getAnotherFunc()
+	myFunc() //should x = 1
+	// is the same...
+	getAnotherFunc()() //also should x = 1
+}
+
+func exercise36() {
+	myFunc := func() {
+		fmt.Println("Function into var")
+	}
+
+	myFunc()
+}
+
+func exercise35() {
+	func() {
+		fmt.Println("Anonymous func")
+	}()
+}
+
+//BEGIN ------ exercise34() --------
+type retangulo struct{ width, height float64 }
+type circulo struct{ raio float64 }
+
+type figura interface{ area() float64 }
+
+func (r retangulo) area() float64 {
+	return r.width * r.height
+}
+
+func (c circulo) area() float64 {
+	return 2 * math.Pi * c.raio
+}
+
+func info(f figura) float64 {
+	return f.area()
+}
+
+func exercise34() {
+	q := retangulo{10, 5}
+	c := circulo{3}
+
+	fmt.Println("Área do retângulo:", info(q))
+	fmt.Println("Área do círculo:", info(c))
+}
+
+//END ------ exercise34() --------
 
 //BEGIN ------ exercise33() --------
 func exercise33() {
-	p01 := pessoa{"Laisson", "Rangel", 36}
+	p01 := people{"Laisson", "Rangel", 36}
 	completename := p01.makeCompleteName()
 	fmt.Println(completename, "is", p01.idade, "years old")
 }
 
-type pessoa struct {
+type people struct {
 	nome, sobrenome string
 	idade           int
 }
 
-func (p pessoa) makeCompleteName() string {
+func (p people) makeCompleteName() string {
 	return fmt.Sprintf("%v %v", p.nome, p.sobrenome)
 }
 
@@ -141,16 +227,16 @@ func exercise30() {
 }
 
 func exercise29() {
-	type pessoa struct {
+	type people struct {
 		nome      string
 		sobrenome string
 		sabores   []string
 	}
 
-	p01 := pessoa{"Laisson", "Silveira", []string{"Chocolate", "Flocos"}}
-	p02 := pessoa{"Elaine", "Machado", []string{"Morango", "Coco"}}
+	p01 := people{"Laisson", "Silveira", []string{"Chocolate", "Flocos"}}
+	p02 := people{"Elaine", "Machado", []string{"Morango", "Coco"}}
 
-	mymap := map[string]pessoa{
+	mymap := map[string]people{
 		p01.sobrenome: p01,
 		p02.sobrenome: p02,
 	}
@@ -165,13 +251,13 @@ func exercise29() {
 }
 
 func exercise28() {
-	type pessoa struct {
+	type people struct {
 		nome      string
 		sobrenome string
 		sabores   []string
 	}
 
-	p01 := pessoa{"Laisson", "Silveira", []string{"Chocolate", "Flocos"}}
+	p01 := people{"Laisson", "Silveira", []string{"Chocolate", "Flocos"}}
 
 	fmt.Println(p01.nome, p01.sobrenome)
 	for _, v := range p01.sabores {
@@ -420,6 +506,9 @@ func exercise06() {
 	fmt.Printf("%d\t|%b\t|%#x\n", a, a, a)
 }
 
+//BEGIN ------ exercise05() --------
+var h int
+
 func exercise05() {
 	fmt.Printf("g -> %v|%T", g, g)
 	g = 42
@@ -429,22 +518,45 @@ func exercise05() {
 	fmt.Printf("h -> %v|%T", h, h)
 }
 
+//END ------ exercise05() --------
+
+//BEGIN ------ exercise04() --------
+type gogo int
+
+var g gogo
+
 func exercise04() {
 	fmt.Printf("g -> %v|%T", g, g)
 	g = 42
 	fmt.Printf("g -> %v|%T", g, g)
 }
 
+//END ------ exercise04() --------
+
+//BEGIN ------ exercise03() --------
+var d int = 42
+var e string = "James Bond"
+var f bool = true
+
 func exercise03() {
 	s := fmt.Sprintf("d: %v, e: %v, f: %v", d, e, f)
 	fmt.Println("s ->", s)
 }
+
+//END ------ exercise03() --------
+
+//BEGIN ------ exercise02() --------
+var a int
+var b string
+var c bool
 
 func exercise02() {
 	fmt.Println("a ->", a)
 	fmt.Println("b ->", b)
 	fmt.Println("c ->", c)
 }
+
+//END ------ exercise02() --------
 
 func exercise01() {
 	x := 42
