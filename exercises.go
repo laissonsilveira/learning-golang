@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
+	"os"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -48,7 +51,205 @@ func main() {
 	// exercise37() //closures
 	// exercise38() //callback
 	// exercise39() //pointers
-	exercise40() //pointers change reference
+	// exercise40() //pointers change reference
+	// exercise41() //JSON marshal
+	// exercise42() //JSON unmarshal
+	// exercise43() //JSON encode
+	// exercise44() //sort
+	exercise45() //sort custom
+}
+
+//BEGIN ------ exercise45() --------
+type user struct {
+	First   string
+	Last    string
+	Age     int
+	Sayings []string
+}
+
+type byAge []user
+
+func (a byAge) Len() int           { return len(a) }
+func (a byAge) Swap(i, j int)      { a[i].Age, a[j].Age = a[j].Age, a[i].Age }
+func (a byAge) Less(i, j int) bool { return a[i].Age < a[j].Age }
+
+type byLast []user
+
+func (a byLast) Len() int           { return len(a) }
+func (a byLast) Swap(i, j int)      { a[i].Last, a[j].Last = a[j].Last, a[i].Last }
+func (a byLast) Less(i, j int) bool { return a[i].Last < a[j].Last }
+
+func exercise45() {
+
+	u1 := user{
+		First: "James",
+		Last:  "Bond",
+		Age:   32,
+		Sayings: []string{
+			"Shaken, not stirred",
+			"Youth is no guarantee of innovation",
+			"In his majesty's royal service",
+		},
+	}
+
+	u2 := user{
+		First: "Miss",
+		Last:  "Moneypenny",
+		Age:   27,
+		Sayings: []string{
+			"James, it is soo good to see you",
+			"Would you like me to take care of that for you, James?",
+			"I would really prefer to be a secret agent myself.",
+		},
+	}
+
+	u3 := user{
+		First: "M",
+		Last:  "Hmmmm",
+		Age:   27,
+		Sayings: []string{
+			"Oh, James. You didn't.",
+			"Dear God, what has James done now?",
+			"Can someone please tell me where James Bond is?",
+		},
+	}
+
+	users := []user{u1, u2, u3}
+
+	fmt.Println(users)
+	fmt.Println("-------------")
+
+	sort.Sort(byAge(users))
+	fmt.Println(users)
+
+	for _, v := range users {
+		sort.Strings(v.Sayings)
+	}
+	fmt.Println(users)
+
+	sort.Sort(byLast(users))
+	fmt.Println(users)
+}
+
+//END ------ exercise45() --------
+
+func exercise44() {
+	xi := []int{5, 8, 2, 43, 17, 987, 14, 12, 21, 1, 4, 2, 3, 93, 13}
+	xs := []string{"random", "rainbow", "delights", "in", "torpedo", "summers", "under", "gallantry", "fragmented", "moons", "across", "magenta"}
+
+	fmt.Println(xi)
+	sort.Ints(xi)
+	fmt.Println(xi)
+
+	fmt.Println(xs)
+	sort.Strings(xs)
+	fmt.Println(xs)
+}
+
+func exercise43() {
+	type user struct {
+		First   string
+		Last    string
+		Age     int
+		Sayings []string
+	}
+
+	u1 := user{
+		First: "James",
+		Last:  "Bond",
+		Age:   32,
+		Sayings: []string{
+			"Shaken, not stirred",
+			"Youth is no guarantee of innovation",
+			"In his majesty's royal service",
+		},
+	}
+
+	u2 := user{
+		First: "Miss",
+		Last:  "Moneypenny",
+		Age:   27,
+		Sayings: []string{
+			"James, it is soo good to see you",
+			"Would you like me to take care of that for you, James?",
+			"I would really prefer to be a secret agent myself.",
+		},
+	}
+
+	u3 := user{
+		First: "M",
+		Last:  "Hmmmm",
+		Age:   54,
+		Sayings: []string{
+			"Oh, James. You didn't.",
+			"Dear God, what has James done now?",
+			"Can someone please tell me where James Bond is?",
+		},
+	}
+
+	users := []user{u1, u2, u3}
+
+	fmt.Println(users)
+
+	fmt.Println("--------")
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.Encode(users)
+}
+
+func exercise42() {
+	s := `[{"First":"James","Last":"Bond","Age":32,"Sayings":["Shaken, not stirred","Youth is no guarantee of innovation","In his majesty's royal service"]},{"First":"Miss","Last":"Moneypenny","Age":27,"Sayings":["James, it is soo good to see you","Would you like me to take care of that for you, James?","I would really prefer to be a secret agent myself."]},{"First":"M","Last":"Hmmmm","Age":54,"Sayings":["Oh, James. You didn't.","Dear God, what has James done now?","Can someone please tell me where James Bond is?"]}]`
+	fmt.Println(s)
+
+	type Users []struct {
+		First   string   `json:"First"`
+		Last    string   `json:"Last"`
+		Age     int      `json:"Age"`
+		Sayings []string `json:"Sayings"`
+	}
+
+	users := Users{}
+	err := json.Unmarshal([]byte(s), &users)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println(users)
+		fmt.Println("The first is:", users[0].First)
+	}
+}
+
+func exercise41() {
+
+	type user struct {
+		First string
+		Age   int
+	}
+
+	u1 := user{
+		First: "James",
+		Age:   32,
+	}
+
+	u2 := user{
+		First: "Moneypenny",
+		Age:   27,
+	}
+
+	u3 := user{
+		First: "M",
+		Age:   54,
+	}
+
+	users := []user{u1, u2, u3}
+
+	fmt.Println(users)
+
+	obj, err := json.Marshal(users)
+	if err == nil {
+		fmt.Println(string(obj))
+	} else {
+		panic(err)
+	}
 }
 
 func exercise40() {
@@ -65,7 +266,6 @@ func exercise40() {
 	fmt.Printf("%v is %v old\n", p.name, p.idade)
 	changePeople(&p)
 	fmt.Printf("%v is %v old\n", p.name, p.idade)
-
 }
 
 func exercise39() {
